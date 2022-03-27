@@ -44,3 +44,14 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+步骤 ；
+npx create-react-app jira_aimee --template typescript 创建 react 和 ts
+npm install --save-dev --save-exact prettier 安装格式化工具
+echo {}> .prettierrc.json 创建一个配置文件
+手动创建.prettierignore 文件
+npx mrm@2 lint-staged 每次提交前自动格式化
+commitlint 提交规范
+manifest.json 用来配置 pwa
+
+robots.txt 用来处理 seo
