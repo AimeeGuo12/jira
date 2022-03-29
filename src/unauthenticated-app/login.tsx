@@ -19,19 +19,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 // test(a)
 
 export const LoginScreen = () => {
-  const { login, user, register, logout } = useAuth();
-  // const login = (param: { username: string; password: string }) => {
-  //   fetch(`${apiUrl}/register`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-type": "application/json",
-  //     },
-  //     body: JSON.stringify(param),
-  //   }).then(async (response) => {
-  //     if (response.ok) {
-  //     }
-  //   });
-  // };
+  const { login, user } = useAuth();
 
   // HTMLFormElement extens Element
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -53,7 +41,7 @@ export const LoginScreen = () => {
         <label htmlFor="password">密码</label>
         <input type="password" id="password" />
       </div>
-      <button type="submit">注册</button>
+      <button type="submit">登录</button>
     </form>
   );
 };

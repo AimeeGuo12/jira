@@ -18,20 +18,8 @@ const apiUrl = process.env.REACT_APP_API_URL;
 // const a = {id: 1, name: 'jack'}
 // test(a)
 
-export const LoginScreen = () => {
-  const { login, user, register, logout } = useAuth();
-  // const login = (param: { username: string; password: string }) => {
-  //   fetch(`${apiUrl}/register`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-type": "application/json",
-  //     },
-  //     body: JSON.stringify(param),
-  //   }).then(async (response) => {
-  //     if (response.ok) {
-  //     }
-  //   });
-  // };
+export const RegisterScreen = () => {
+  const { user, register } = useAuth();
 
   // HTMLFormElement extens Element
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -40,11 +28,10 @@ export const LoginScreen = () => {
       .value;
     const password = (event.currentTarget.elements[1] as HTMLInputElement)
       .value;
-    login({ username, password });
+    register({ username, password });
   };
   return (
     <form onSubmit={handleSubmit}>
-      登录成功， 用户名： {user?.name}
       <div>
         <label htmlFor="username">用户名</label>
         <input type="text" id={"username"} />
