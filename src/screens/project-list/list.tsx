@@ -1,4 +1,6 @@
 import { User } from "screens/project-list/search-panel";
+import { Table } from "antd";
+import { render } from "@testing-library/react";
 interface Project {
   id: string;
   name: string;
@@ -13,25 +15,27 @@ interface ListProps {
 
 export const List = ({ list, users }: ListProps) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>名称</th>
-          <th>负责人</th>
-        </tr>
-      </thead>
-      <tbody>
-        {list.map((project) => (
-          <tr key={project.id}>
-            <td>{project.name}</td>
-            {/* // ?.name 就是如果有就.name  必须要挨着写 */}
-            <td>
-              {users.find((user) => user.id === project.personId)?.name ||
-                "未知"}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Table
+      pagination={false}
+      columns={[
+        {
+          title: "名称",
+          dataIndex: "name",
+          sorter: (a, b) => a.name.localeCompare(b.name), // localeCompare可以处理中文字符
+        },
+        {
+          title: "负责人",
+          render(value, project) {
+            return (
+              <span>
+                {users.find((user: User) => user.id === project.personId)
+                  ?.name || "未知"}
+              </span>
+            );
+          },
+        },
+      ]}
+      dataSource={list}
+    ></Table>
   );
 };
