@@ -1,6 +1,7 @@
 import { useAuth } from "context/auth-context";
 import { FormEvent } from "react";
 import { Form, Input, Button } from "antd";
+import { LongButton } from "unauthenticated-app";
 const apiUrl = process.env.REACT_APP_API_URL;
 // ts是鸭子类型（duck typing）： 面向接口编程， 不是面向对象编程
 // 如：
@@ -40,9 +41,9 @@ export const LoginScreen = () => {
       >
         <Input placeholder={"密码"} type="text" id={"password"} />
       </Form.Item>
-      <Button htmlType="submit" type="primary">
+      <LongButton htmlType="submit" type="primary">
         登录
-      </Button>
+      </LongButton>
     </Form>
   );
 };
