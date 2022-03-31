@@ -1,6 +1,6 @@
 import { useAuth } from "context/auth-context";
 import { FormEvent } from "react";
-const apiUrl = process.env.REACT_APP_API_URL;
+// const apiUrl = process.env.REACT_APP_API_URL;
 // ts是鸭子类型（duck typing）： 面向接口编程， 不是面向对象编程
 // 如：
 // interface Base{
@@ -19,7 +19,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 // test(a)
 
 export const LoginScreen = () => {
-  const { login, user, register, logout } = useAuth();
+  const { login, user } = useAuth();
   // const login = (param: { username: string; password: string }) => {
   //   fetch(`${apiUrl}/register`, {
   //     method: "POST",

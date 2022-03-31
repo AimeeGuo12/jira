@@ -1,6 +1,5 @@
 import { User } from "screens/project-list/search-panel";
 import { Table } from "antd";
-import { render } from "@testing-library/react";
 import dayjs from "dayjs";
 interface Project {
   id: string;
