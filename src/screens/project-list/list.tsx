@@ -1,6 +1,8 @@
 import { User } from "screens/project-list/search-panel";
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
+// react-router 和 react-router-dom类似于react 和 react-dom/react-native/react-vr  react是核心库，主要是计算 diff等 将结果给react-dom
+import { Link } from "react-router-dom";
 export interface Project {
   id: string;
   name: string;
@@ -22,8 +24,11 @@ export const List = ({ users, ...props }: ListProps) => {
       columns={[
         {
           title: "名称",
-          dataIndex: "name",
+          // dataIndex: "name",
           sorter: (a, b) => a.name.localeCompare(b.name), // localeCompare可以处理中文字符
+          render(value, project) {
+            return <Link to={String(project.id)}>{project.name}</Link>;
+          },
         },
         {
           title: "部门",
