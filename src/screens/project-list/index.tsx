@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SearchPanel } from "./search-panel";
-import { List, Project } from "./list";
-import { cleanObject, useMount, useDebounce } from "../../utils/index";
-import { useHttp } from "utils/http";
+import { List } from "./list";
+import { useDebounce, useDocumentTitle } from "../../utils/index";
 // import qs from "qs"; // qs的类型文件？ 我这里已经有ts的index.d.ts文件了。如果没有，需要安装@type/qs;
 import styled from "@emotion/styled";
 import { Typography } from "antd";
-import { useAsync } from "utils/use-async";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 
@@ -27,6 +25,7 @@ export const ProjectListScreen = () => {
   // 初始化users
   const { data: users } = useUsers();
 
+  useDocumentTitle("项目列表", false);
   return (
     <Container>
       <h1>项目列表</h1>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 export const isVoid = (value: unknown) =>
@@ -58,4 +58,24 @@ export const useArray = <T>(initialArray: T[]) => {
       setValue(copy);
     },
   };
+};
+
+// useRef保存的值，在整个生命周期都不会变化
+// 改变文档名字  也可使用插件 Helmet
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
+  const oldTitle = useRef(document.title).current;
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        // 如果不指定oldtitle依赖 卸载时读到的还是旧的title
+        document.title = oldTitle;
+      }
+    };
+  }, [oldTitle, keepOnUnmount]);
 };
