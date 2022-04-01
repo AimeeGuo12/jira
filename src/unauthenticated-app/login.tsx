@@ -2,6 +2,7 @@ import { useAuth } from "context/auth-context";
 import { FormEvent } from "react";
 import { Form, Input, Button } from "antd";
 import { LongButton } from "unauthenticated-app";
+import { useAsync } from "utils/use-async";
 const apiUrl = process.env.REACT_APP_API_URL;
 // ts是鸭子类型（duck typing）： 面向接口编程， 不是面向对象编程
 // 如：
@@ -20,12 +21,26 @@ const apiUrl = process.env.REACT_APP_API_URL;
 // const a = {id: 1, name: 'jack'}
 // test(a)
 
-export const LoginScreen = () => {
+export const LoginScreen = ({
+  onError,
+}: {
+  onError: (error: Error) => void;
+}) => {
   const { login, user } = useAuth();
+  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
 
   // HTMLFormElement extens Element
-  const handleSubmit = (values: { username: string; password: string }) => {
-    login(values);
+  const handleSubmit = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    // try{
+    //     await login(values);
+    // }catch(e) {
+    //     onError(e)
+    // }
+    // 处理同异步一起的情况 应该用try catch 但是e老是说是unknow类型的 先用下面这种吧
+    run(login(values)).catch((e) => onError(e));
   };
   return (
     <Form onFinish={handleSubmit}>
@@ -39,9 +54,9 @@ export const LoginScreen = () => {
         name={"password"}
         rules={[{ required: true, message: "请输入密码" }]}
       >
-        <Input placeholder={"密码"} type="text" id={"password"} />
+        <Input placeholder={"密码"} type="password" id={"password"} />
       </Form.Item>
-      <LongButton htmlType="submit" type="primary">
+      <LongButton loading={isLoading} htmlType="submit" type="primary">
         登录
       </LongButton>
     </Form>

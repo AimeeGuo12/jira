@@ -9,7 +9,7 @@ export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
 
   useEffect(() => {
-    run(client("project", { data: cleanObject(param || {}) }));
+    run(client("projects", { data: cleanObject(param || {}) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param]);
   return result;

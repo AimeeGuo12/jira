@@ -1,6 +1,6 @@
 import { useAuth } from "context/auth-context";
-import { FormEvent } from "react";
 import { Form, Button, Input } from "antd";
+import { useAsync } from "utils/use-async";
 const apiUrl = process.env.REACT_APP_API_URL;
 // ts是鸭子类型（duck typing）： 面向接口编程， 不是面向对象编程
 // 如：
@@ -19,12 +19,33 @@ const apiUrl = process.env.REACT_APP_API_URL;
 // const a = {id: 1, name: 'jack'}
 // test(a)
 
-export const RegisterScreen = () => {
+export const RegisterScreen = ({
+  onError,
+}: {
+  onError: (error: Error) => void;
+}) => {
   const { user, register } = useAuth();
+  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
 
   // HTMLFormElement extens Element
-  const handleSubmit = (values: { username: string; password: string }) => {
-    register(values);
+  const handleSubmit = async ({
+    cpassword,
+    ...values
+  }: {
+    username: string;
+    password: string;
+    cpassword: string;
+  }) => {
+    // try{
+    //     await register(values);
+    // }catch(e) {
+    //     onError(e)
+    // }
+    if (cpassword !== values.password) {
+      onError(new Error("请确认两次输入的密码相同"));
+      return;
+    }
+    run(register(values)).catch((e) => onError(e));
   };
   return (
     <Form onFinish={handleSubmit}>
@@ -38,9 +59,15 @@ export const RegisterScreen = () => {
         name={"password"}
         rules={[{ required: true, message: "请输入密码" }]}
       >
-        <Input placeholder={"密码"} type="text" id={"password"} />
+        <Input placeholder={"密码"} type="password" id={"password"} />
       </Form.Item>
-      <Button htmlType="submit" type="primary">
+      <Form.Item
+        name={"cpassword"}
+        rules={[{ required: true, message: "请确认密码" }]}
+      >
+        <Input placeholder={"请确认密码"} type="password" id={"cpassword"} />
+      </Form.Item>
+      <Button loading={isLoading} htmlType="submit" type="primary">
         注册
       </Button>
     </Form>
