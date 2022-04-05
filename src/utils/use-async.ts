@@ -24,7 +24,10 @@ export const useAsync = <D>(
     ...defaultInitalState,
     ...initalState,
   });
-
+  // useState直接传入函数的含义是： 惰性初始化，会直接运行函数，setRetry的时候传入函数，也是会直接运行？ 所以，要用useState
+  // 保存函数，不能直接传入函数，可以在函数外面再加一层函数
+  // https://codesandbox.io/blissful-water-23@u4?file=/src/App.js
+  const [retry, setRetry] = useState(() => () => {});
   const setData = (data: D) =>
     setState({
       data,
@@ -39,11 +42,20 @@ export const useAsync = <D>(
       stat: "error",
     });
 
-  // run 用来触发异步请求
-  const run = (promise: Promise<D>) => {
+  // run 用来触发异步请求    这里的retry是将返回promise这个请求再执行一遍
+  const run = (
+    promise: Promise<D>,
+    runConfig?: { retry: () => Promise<D> }
+  ) => {
     if (!promise || !promise.then) {
       throw new Error("请传入 Promise 类型数据");
     }
+    setRetry(() => () => {
+      // 将函数保存到retry
+      if (runConfig?.retry) {
+        run(runConfig?.retry(), runConfig);
+      }
+    });
     setState({ ...state, stat: "loading" });
     return promise
       .then((data) => {
@@ -63,6 +75,8 @@ export const useAsync = <D>(
     isError: state.stat === "error",
     isSuccess: state.stat === "success",
     run,
+    // retry被调用时，重新跑一遍run
+    retry,
     setData,
     setError,
     ...state,

@@ -3,10 +3,12 @@ import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 // react-router 和 react-router-dom类似于react 和 react-dom/react-native/react-vr  react是核心库，主要是计算 diff等 将结果给react-dom
 import { Link } from "react-router-dom";
+import { Pin } from "components/pin";
+import { useEditProject } from "utils/project";
 export interface Project {
-  id: string;
+  id: number;
   name: string;
-  personId: string;
+  personId: number;
   organization: string;
   pin: boolean;
   created: number;
@@ -14,14 +16,30 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   // list: Project[];
   users: User[];
+  refresh?: () => void;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
+  const { mutate } = useEditProject();
+  // 柯里化  因为id是先知道的，可以先处理id， pin是点击以后再得到的，后处理
+  const PinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(props.refresh);
   return (
     <Table
       rowKey={"id"}
       pagination={false}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project) {
+            return (
+              <Pin
+                checked={project.pin}
+                onCheckedChange={PinProject(project.id)}
+              />
+            );
+          },
+        },
         {
           title: "名称",
           // dataIndex: "name",
