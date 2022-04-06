@@ -83,3 +83,42 @@ export const useDocumentTitle = (
 export const resetRoute = () => {
   return (window.location.href = window.location.origin);
 };
+/**
+ * 传入一个对象，和键集合，返回对应的对象中的键值对
+ * @param obj
+ * @param keys
+ */
+export const subset = <
+  O extends { [key in string]: unknown },
+  K extends keyof O
+>(
+  obj: O,
+  keys: K[]
+) => {
+  const filteredEntries = Object.entries(obj).filter(([key]) =>
+    keys.includes(key as K)
+  );
+  return Object.fromEntries(filteredEntries) as Pick<O, K>;
+};
+
+/**
+ * 返回组件的挂载状态，如果还没挂载或者已经卸载，返回false；反之，返回true
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+  // 返回一个可变的 ref 对象，该对象只有个 current 属性，初始值为传入的参数( initialValue )。
+  // 返回的 ref 对象在组件的整个生命周期内保持不变
+  // 当更新 current 值时并不会 re-render ，这是与 useState 不同的地方
+  // 更新 useRef 是 side effect (副作用)，所以一般写在 useEffect 或 event handler 里
+  // useRef 类似于类组件的 this
+
+  useEffect(() => {
+    // 页面加载渲染后 变为true
+    mountedRef.current = true;
+    return () => {
+      // 卸载的时候改变为false
+      mountedRef.current = false;
+    };
+  });
+  return mountedRef;
+};

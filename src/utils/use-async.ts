@@ -1,5 +1,6 @@
 import { stat } from "fs";
 import { useState } from "react";
+import { useMountedRef } from "utils";
 
 interface State<D> {
   error: Error | null;
@@ -28,6 +29,8 @@ export const useAsync = <D>(
   // 保存函数，不能直接传入函数，可以在函数外面再加一层函数
   // https://codesandbox.io/blissful-water-23@u4?file=/src/App.js
   const [retry, setRetry] = useState(() => () => {});
+  const mountedRef = useMountedRef();
+
   const setData = (data: D) =>
     setState({
       data,
@@ -59,7 +62,8 @@ export const useAsync = <D>(
     setState({ ...state, stat: "loading" });
     return promise
       .then((data) => {
-        setData(data);
+        // 不加限制时，当请求被打断刷新页面了 这个操作会报错setData
+        if (mountedRef.current) setData(data);
         return data;
       })
       .catch((error) => {
